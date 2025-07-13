@@ -15,7 +15,6 @@ const DysgraphiaGamePage = ({ onBack }) => {
   const [dragStartTime, setDragStartTime] = useState(null);
   const [totalDragTime, setTotalDragTime] = useState(0);
   const [dragCount, setDragCount] = useState(0);
-  const audioRef = useRef(null);
 
   // Game data for each level
   const gameData = {
@@ -146,7 +145,7 @@ const DysgraphiaGamePage = ({ onBack }) => {
     } else if (timeLeft === 0 && !showResult) {
       handleTimeUp();
     }
-  }, [timeLeft, gameStarted, gameCompleted, showResult]);
+  }, [timeLeft, gameStarted, gameCompleted, showResult, handleTimeUp]);
 
   // Initialize question
   useEffect(() => {

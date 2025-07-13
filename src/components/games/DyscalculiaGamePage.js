@@ -51,7 +51,7 @@ const DyscalculiaGamePage = ({ onBack }) => {
     } else if (timeLeft === 0 && !showResult) {
       handleTimeUp();
     }
-  }, [timeLeft, gameStarted, gameCompleted, showResult]);
+  }, [timeLeft, gameStarted, gameCompleted, showResult, handleTimeUp]);
 
   // Set question start time when new question begins
   useEffect(() => {
@@ -146,19 +146,6 @@ const DyscalculiaGamePage = ({ onBack }) => {
       setShowResult(false);
       setTimeLeft(15);
     }
-  };
-
-  const restartGame = () => {
-    setCurrentLevel(1);
-    setGameStarted(false);
-    setGameCompleted(false);
-    setCurrentQuestion(0);
-    setScore(0);
-    setResponses([]);
-    setReactionTimes([]);
-    setSelectedAnswer(null);
-    setShowResult(false);
-    setTimeLeft(15);
   };
 
   const getLevelDescription = (level) => {

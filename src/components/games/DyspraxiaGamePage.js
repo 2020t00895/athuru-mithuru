@@ -519,9 +519,6 @@ const DyspraxiaGamePage = ({ onBack }) => {
                 </button>
                 
                 <button
-              🚪 ඉවත්වන්න
-            </button>
-          </div>
                 >
                   ← ආපසු යන්න
                 </button>
