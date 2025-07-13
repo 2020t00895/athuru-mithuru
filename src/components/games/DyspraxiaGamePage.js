@@ -502,7 +502,7 @@ const DyspraxiaGamePage = ({ onBack }) => {
               </div>
               
               <div className="flex gap-2 sm:gap-4 justify-center flex-wrap">
-                {currentLevel < 3 && analysis.accuracy >= 50 && (
+                {currentLevel < 3 && (
                   <button
                     onClick={nextLevel}
                     className="bg-green-600 hover:bg-green-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full font-bold transition-colors duration-300 transform hover:scale-105 text-sm sm:text-base"
@@ -519,8 +519,9 @@ const DyspraxiaGamePage = ({ onBack }) => {
                 </button>
                 
                 <button
-                  onClick={onBack}
-                  className="bg-white text-purple-600 px-4 sm:px-6 py-2 sm:py-3 rounded-full font-bold hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105 text-sm sm:text-base"
+              🚪 ඉවත්වන්න
+            </button>
+          </div>
                 >
                   ← ආපසු යන්න
                 </button>
