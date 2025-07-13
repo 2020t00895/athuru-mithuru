@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 const DysgraphiaGamePage = ({ onBack }) => {
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -70,6 +70,28 @@ const DysgraphiaGamePage = ({ onBack }) => {
 
   const currentQuestions = gameData[currentLevel];
   const totalQuestions = currentQuestions.length;
+
+  // Memoized handleTimeUp function
+  const handleTimeUp = useCallback(() => {
+    const timeTaken = questionStartTime ? (Date.now() - questionStartTime) / 1000 : 60;
+    const averageDragTime = dragCount > 0 ? totalDragTime / dragCount : 0;
+    
+    setResponses(prev => [...prev, {
+      question: currentQuestion,
+      userAnswer: draggedLetters.map(item => item?.letter || '').join(''),
+      correct: currentQuestions[currentQuestion].word,
+      timeTaken: timeTaken,
+      averageDragTime: averageDragTime,
+      dragCount: dragCount,
+      isCorrect: false,
+      completed: false
+    }]);
+    
+    // Play lose sound for timeout
+    playLoseSound();
+    
+    nextQuestion();
+  }, [currentQuestion, currentQuestions, questionStartTime, dragCount, totalDragTime, draggedLetters]);
 
   // Audio effects
   const playWinSound = () => {
@@ -177,27 +199,6 @@ const DysgraphiaGamePage = ({ onBack }) => {
     setTimeout(() => {
       speakWord(currentWord.word);
     }, 1000);
-  };
-
-  const handleTimeUp = () => {
-    const timeTaken = questionStartTime ? (Date.now() - questionStartTime) / 1000 : 60;
-    const averageDragTime = dragCount > 0 ? totalDragTime / dragCount : 0;
-    
-    setResponses(prev => [...prev, {
-      question: currentQuestion,
-      userAnswer: draggedLetters.map(item => item?.letter || '').join(''),
-      correct: currentQuestions[currentQuestion].word,
-      timeTaken: timeTaken,
-      averageDragTime: averageDragTime,
-      dragCount: dragCount,
-      isCorrect: false,
-      completed: false
-    }]);
-    
-    // Play lose sound for timeout
-    playLoseSound();
-    
-    nextQuestion();
   };
 
   const startGame = () => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 const DyscalculiaGamePage = ({ onBack }) => {
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -41,6 +41,22 @@ const DyscalculiaGamePage = ({ onBack }) => {
   const currentQuestions = gameData[currentLevel];
   const totalQuestions = currentQuestions.length;
 
+  // Memoized handleTimeUp function
+  const handleTimeUp = useCallback(() => {
+    const reactionTime = questionStartTime ? Date.now() - questionStartTime : 15000;
+    setReactionTimes(prev => [...prev, reactionTime]);
+    
+    setResponses(prev => [...prev, {
+      question: currentQuestion,
+      userAnswer: null,
+      correct: currentQuestions[currentQuestion].correct,
+      timeTaken: 15,
+      reactionTime: reactionTime,
+      isCorrect: false
+    }]);
+    nextQuestion();
+  }, [currentQuestion, currentQuestions, questionStartTime]);
+
   // Timer effect
   useEffect(() => {
     if (gameStarted && !gameCompleted && !showResult && timeLeft > 0) {
@@ -59,21 +75,6 @@ const DyscalculiaGamePage = ({ onBack }) => {
       setQuestionStartTime(Date.now());
     }
   }, [currentQuestion, gameStarted, showResult]);
-
-  const handleTimeUp = () => {
-    const reactionTime = questionStartTime ? Date.now() - questionStartTime : 15000;
-    setReactionTimes(prev => [...prev, reactionTime]);
-    
-    setResponses(prev => [...prev, {
-      question: currentQuestion,
-      userAnswer: null,
-      correct: currentQuestions[currentQuestion].correct,
-      timeTaken: 15,
-      reactionTime: reactionTime,
-      isCorrect: false
-    }]);
-    nextQuestion();
-  };
 
   const startGame = () => {
     setGameStarted(true);
