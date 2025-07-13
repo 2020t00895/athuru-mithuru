@@ -99,10 +99,16 @@ const DyspraxiaGamePage = ({ onBack }) => {
   };
 
   // Generate random star positions
-  const generateStarPositions = (count) => {
+  const generateStarPositions = (count, containerWidth = window.innerWidth, containerHeight = window.innerHeight) => {
     const positions = [];
-    const minDistance = 80; // Minimum distance between stars
-    const margin = 60; // Margin from edges
+    const minDistance = 80;
+    const margin = 80; // Increased margin to keep stars well within bounds
+    
+    // Define the game area boundaries (smaller than full screen)
+    const gameAreaWidth = Math.min(containerWidth * 0.85, 800); // 85% of screen width, max 800px
+    const gameAreaHeight = Math.min(containerHeight * 0.6, 500); // 60% of screen height, max 500px
+    const offsetX = (containerWidth - gameAreaWidth) / 2;
+    const offsetY = (containerHeight - gameAreaHeight) / 2 + 100; // Add some top offset for header
     
     for (let i = 0; i < count; i++) {
       let position;
@@ -110,8 +116,8 @@ const DyspraxiaGamePage = ({ onBack }) => {
       
       do {
         position = {
-          x: margin + Math.random() * (window.innerWidth - 2 * margin),
-          y: margin + Math.random() * (window.innerHeight - 2 * margin),
+          x: offsetX + margin + Math.random() * (gameAreaWidth - 2 * margin),
+          y: offsetY + margin + Math.random() * (gameAreaHeight - 2 * margin),
           id: i
         };
         attempts++;
@@ -160,7 +166,7 @@ const DyspraxiaGamePage = ({ onBack }) => {
     setShowResult(false);
     
     // Generate star positions
-    const positions = generateStarPositions(currentConfig.starCount);
+    const positions = generateStarPositions(currentConfig.starCount, window.innerWidth, window.innerHeight);
     setStarPositions(positions);
     
     // Start first star
@@ -574,7 +580,19 @@ const DyspraxiaGamePage = ({ onBack }) => {
       </div>
 
       {/* Game Stars */}
-      <div className="relative z-10 w-full h-full">
+      <div className="relative z-10 w-full h-full flex items-center justify-center">
+        {/* Game Area Container */}
+        <div className="relative border-2 border-white/30 rounded-2xl bg-black/20 backdrop-blur-sm" 
+             style={{
+               width: 'min(85vw, 800px)',
+               height: 'min(60vh, 500px)',
+               marginTop: '2rem'
+             }}>
+          {/* Container Label */}
+          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-white/60 text-sm font-semibold">
+            ක්‍රීඩා ප්‍රදේශය
+          </div>
+          
         {starPositions.map((position, index) => (
           <button
             key={position.id}
@@ -592,8 +610,8 @@ const DyspraxiaGamePage = ({ onBack }) => {
                 : 'cursor-default'
             }`}
             style={{
-              left: `${Math.min(Math.max(position.x, 40), window.innerWidth - 40)}px`,
-              top: `${Math.min(Math.max(position.y, 100), window.innerHeight - 100)}px`,
+              left: `${position.x - (window.innerWidth - Math.min(window.innerWidth * 0.85, 800)) / 2}px`,
+              top: `${position.y - (window.innerHeight - Math.min(window.innerHeight * 0.6, 500)) / 2 - 100}px`,
               fontSize: index === activeStarIndex && isFlashing ? '5rem' : '3.5rem',
               filter: index === activeStarIndex && isFlashing 
                 ? 'drop-shadow(0 0 20px #fbbf24) drop-shadow(0 0 40px #f59e0b)' 
@@ -607,6 +625,7 @@ const DyspraxiaGamePage = ({ onBack }) => {
             ⭐
           </button>
         ))}
+        </div>
       </div>
 
       {/* Result Display */}
